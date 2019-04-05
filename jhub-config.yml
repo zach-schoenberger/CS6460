@@ -1,0 +1,17 @@
+proxy:
+  secretToken: "82d6a395f145eaf747e7b19f91428e1e92129ab62746086b82e0d7e20dadc3e1"
+
+singleuser:
+  image:
+    # Get the latest image tag at:
+    # https://hub.docker.com/r/jupyter/datascience-notebook/tags/
+    # Inspect the Dockerfile at:
+    # https://github.com/jupyter/docker-stacks/tree/master/datascience-notebook/Dockerfile
+    name: jupyter/pyspark-notebook
+    tag: latest
+    defaultUrl: "/lab"
+
+hub:
+  extraConfig:
+    jupyterlab: |
+      c.Spawner.cmd = ['jupyter-labhub']
