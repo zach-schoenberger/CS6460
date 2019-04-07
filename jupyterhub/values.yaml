@@ -184,6 +184,10 @@ singleuser:
   extraLabels:
     hub.jupyter.org/network-access-hub: 'true'
   extraEnv: {}
+  # - name: HOSTIP
+  #     valueFrom:
+  #       fieldRef:
+  #         fieldPath: status.podIP
   lifecycleHooks:
   initContainers: []
   extraContainers: []
@@ -208,7 +212,7 @@ singleuser:
   image:
     name: jupyterhub/k8s-singleuser-sample
     tag: '0.8.0'
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   imagePullSecret:
     enabled: false
     registry:
@@ -295,3 +299,11 @@ cull:
 
 debug:
   enabled: false
+
+spawner:
+  service:
+    type: ClusterIP
+    annotations: {}
+    ports:
+      nodePort:
+    loadBalancerIP:

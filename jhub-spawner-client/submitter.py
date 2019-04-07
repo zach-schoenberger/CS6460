@@ -4,10 +4,9 @@ from jhubSpawnerClient import *
 from IPython.display import display, Markdown, Latex
 
 
-def submit(notebook):
+def submit(notebook, force=False):
     handler = JhubSpawnerClient(9999)
-    res = handler.sendNotebook(notebook)
-    print(res)
+    res = handler.sendNotebook(notebook,force)
     res = _parseResult(res, handler)
     return res
 
@@ -40,4 +39,5 @@ def _handleSuccess(resj):
 
 
 if __name__ == '__main__':
-    submit("./plot_isotonic_regression.ipynb")
+    res = submit("./test.ipynb", True)
+    print(res)

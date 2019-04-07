@@ -3,54 +3,63 @@ import socketserver
 import urllib
 from http.server import BaseHTTPRequestHandler
 from urllib import parse
+import os
+import subprocess
 from urllib.parse import urlparse
 
 import requests
 
-global waitResult
-
+waitResult = None
 
 class JhubRequestHandler(BaseHTTPRequestHandler):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print(self.__file__)
 
     def do_GET(self):
         self.send_response(200, "success")
         self.end_headers()
 
     def do_POST(self):
+        global waitResult
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length)
         self.send_response(200, "success")
         self.end_headers()
-        globals().waitResult = post_data
+        waitResult = post_data
 
 
 class JhubSpawnerClient(object):
-    # jhubUrl = "http://jupyter-spawner.jhub.svc.cluster.local"
-    jhubUrl = "localhost"
+    global waitResult
+    jhubUrl = "jupyter-spawner.jhub.svc.cluster.local"
+    jhubPort = 80
+    # jhubUrl = "localhost"
+    # jhubPort = 8888
 
     def __init__(self, port):
         self.port = port
         self.Handler = JhubRequestHandler
 
-    def sendNotebook(self, notebook):
+    def sendNotebook(self, notebook, force=False):
         nbData = ""
         with open(notebook) as nb:
             for line in nb:
                 nbData += line
+        ip = subprocess.Popen("hostname -i", shell=True, stdout=subprocess.PIPE).stdout.read().strip()
 
-        params = {'uid': 'zach',
-                  'adr': self.jhubUrl,
+        params = {'uid': self.getVar('JUPYTERHUB_USER'),
+                  'adr': ip,
                   'prt': self.port,
-                  # 'frc': True
+                  'frc': force
                   }
         query = urllib.parse.urlencode(params)
-        resp = requests.post("http://%s:%d/notebook/run?%s" % (self.jhubUrl, 8888, query), data=nbData)
+        uri = "http://%s:%d/notebook/run?%s" % (self.jhubUrl, self.jhubPort, query)
+        print(uri)
+        resp = requests.post(uri, data=nbData)
         return resp.text
 
     def waitForResult(self):
+        global waitResult
         with socketserver.TCPServer(("", self.port), self.Handler) as httpd:
             try:
                 print("serving at port ", self.port)
@@ -58,8 +67,14 @@ class JhubSpawnerClient(object):
             except KeyboardInterrupt:
                 pass
             httpd.server_close()
-        result = globals().waitResult
-        globals().waitResult = None
+        result = waitResult
+
         return result
+
+    def getVar(self, name, default="NULL"):
+        value = os.environ.get(name)
+        if value is None:
+            return default
+        return value
 
 

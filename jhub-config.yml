@@ -7,11 +7,18 @@ singleuser:
     # https://hub.docker.com/r/jupyter/datascience-notebook/tags/
     # Inspect the Dockerfile at:
     # https://github.com/jupyter/docker-stacks/tree/master/datascience-notebook/Dockerfile
-    name: jupyter/pyspark-notebook
+    name: zschoenb/jhub-notebook
     tag: latest
+    imagePullPolicy: Always
     defaultUrl: "/lab"
 
 hub:
   extraConfig:
     jupyterlab: |
       c.Spawner.cmd = ['jupyter-labhub']
+
+spawner:
+  image:
+    name: zschoenb/jhub-spawner
+    tag: latest
+    imagePullPolicy: Always

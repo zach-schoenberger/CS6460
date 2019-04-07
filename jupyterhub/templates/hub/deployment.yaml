@@ -170,3 +170,15 @@ spec:
           ports:
             - containerPort: 8081
               name: hub
+        - name: jhub-spawner
+          image: {{ .Values.spawner.image.name }}:{{ .Values.spawner.image.tag }} 
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8888
+              name: spawner
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: redis-password
+                  name: redis

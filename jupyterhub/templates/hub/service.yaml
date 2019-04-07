@@ -28,3 +28,22 @@ spec:
       {{- if .Values.hub.service.ports.nodePort }}
       nodePort: {{ .Values.hub.service.ports.nodePort }}
       {{- end }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jupyter-spawner
+  labels:
+    {{- include "jupyterhub.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.spawner.service.type }}
+  {{- if .Values.spawner.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.spawner.service.loadBalancerIP }}
+  {{- end }}
+  selector:
+    {{- include "jupyterhub.matchLabels" . | nindent 4 }}
+  ports:
+    - port: 80
+      targetPort: 8888
+      protocol: TCP
