@@ -19,6 +19,7 @@ helm upgrade --install $REDIS_RELEASE stable/redis \
 kubectl create clusterrolebinding jhub-admin --clusterrole=cluster-admin --serviceaccount=jhub:hub
 
 export REDIS_PASSWORD=$(kubectl get secret --namespace ${NAMESPACE} ${REDIS_RELEASE} -o jsonpath="{.data.redis-password}" | base64 --decode)
-export SERVICE_IP=$(kubectl get svc --namespace ${NAMESPACE} ${REDIS_RELEASE}-master --template "{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}")
+# export SERVICE_IP=$(kubectl get svc --namespace ${NAMESPACE} ${REDIS_RELEASE}-master --template "{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}")
 
+kubectl delete secret redis --namespace ${NAMESPACE}
 kubectl create secret generic redis --from-literal=redis_password=${REDIS_PASSWORD} --namespace ${NAMESPACE}

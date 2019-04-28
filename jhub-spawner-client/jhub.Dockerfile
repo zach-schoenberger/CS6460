@@ -9,5 +9,6 @@ RUN echo 'export HOSTIP=$(hostname -i)' >> /etc/bash.bashrc
 
 
 COPY ./*.py /opt/client/
+COPY ./examples /home/jovyan/examples
+COPY ./examples /opt/client/
 ENV PYTHONPATH=$PYTHONPATH:/opt/client
-

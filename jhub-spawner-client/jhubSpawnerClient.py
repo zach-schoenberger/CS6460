@@ -32,7 +32,7 @@ class JhubRequestHandler(BaseHTTPRequestHandler):
 
 class JhubSpawnerClient(object):
     global waitResult
-    jhubUrl = "jupyter-spawner.jhub.svc.cluster.local"
+    jhubUrl = "jupyter-spawner.jhub2.svc.cluster.local"
     jhubPort = 80
     # jhubUrl = "localhost"
     # jhubPort = 8888
