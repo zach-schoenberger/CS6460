@@ -4,9 +4,9 @@ from jhubSpawnerClient import *
 from IPython.display import display, Markdown, Latex
 
 
-def submit(notebook, force=False):
+def submit(notebook, assignment, force=False):
     handler = JhubSpawnerClient(9999)
-    res = handler.sendNotebook(notebook,force)
+    res = handler.sendNotebook(notebook, assignment, force)
     res = _parseResult(res, handler)
     return res
 

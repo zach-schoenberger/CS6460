@@ -11,6 +11,7 @@ import requests
 
 waitResult = None
 
+
 class JhubRequestHandler(BaseHTTPRequestHandler):
 
     def __init__(self, *args, **kwargs):
@@ -40,7 +41,7 @@ class JhubSpawnerClient(object):
         self.port = port
         self.Handler = JhubRequestHandler
 
-    def sendNotebook(self, notebook, force=False):
+    def sendNotebook(self, notebook, assignment, force=False):
         nbData = ""
         with open(notebook) as nb:
             for line in nb:
@@ -50,6 +51,7 @@ class JhubSpawnerClient(object):
         params = {'uid': self.getVar('JUPYTERHUB_USER'),
                   'adr': ip,
                   'prt': self.port,
+                  'asnmt': assignment,
                   'frc': force
                   }
         query = urllib.parse.urlencode(params)

@@ -10,10 +10,10 @@ helm upgrade --install $RELEASE jupyterhub/jupyterhub \
   --recreate-pods \
   --values jhub-config.yml
 
-#helm upgrade --install redis stable/redis \
-#    --namespace jhub \
-#    --set master.service.type=LoadBalancer \
-#    --recreate-pods
+helm upgrade --install redis stable/redis \
+    --namespace jhub \
+    --set master.service.type=LoadBalancer \
+    --recreate-pods
 
 kubectl create clusterrolebinding jhub-admin --clusterrole=cluster-admin --serviceaccount=jhub:hub
 
