@@ -16,7 +16,7 @@ helm upgrade --install $REDIS_RELEASE stable/redis \
     --set master.service.type=LoadBalancer \
     --recreate-pods
 
-kubectl create clusterrolebinding jhub-admin --clusterrole=cluster-admin --serviceaccount=jhub:hub
+kubectl create clusterrolebinding ${JHUB_RELEASE}-admin --clusterrole=cluster-admin --serviceaccount=${JHUB_RELEASE}:hub
 
 export REDIS_PASSWORD=$(kubectl get secret --namespace ${NAMESPACE} ${REDIS_RELEASE} -o jsonpath="{.data.redis-password}" | base64 --decode)
 # export SERVICE_IP=$(kubectl get svc --namespace ${NAMESPACE} ${REDIS_RELEASE}-master --template "{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}")
